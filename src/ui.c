@@ -314,13 +314,18 @@ Image generate_image_from_frame_buffer() {
 
     return image;
 }
+
 void draw_frame_buffer() {
     Image image = generate_image_from_frame_buffer();
-    scene = LoadTextureFromImage(image);
+
+    if (scene.id == 0) {
+        scene = LoadTextureFromImage(image);
+    } else {
+        UpdateTexture(scene, image.data);
+    }
 
     DrawTexture(scene, 0, 0, WHITE);
 
-    UnloadTexture(scene);
     UnloadImage(image);
 }
 
@@ -328,8 +333,6 @@ void clear_frame_buffer() {
     for(int i = 0; i < SCREEN_HEIGHT; i++) {
         memset(frame_buffer[i], 0, SCREEN_WIDTH);
     }
-
-    UnloadTexture(scene);
 }
 
 //----------------------------------------------------------------------------------
