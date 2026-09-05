@@ -313,9 +313,9 @@ Image generate_image_from_frame_buffer() {
 void draw_frame_buffer() {
     Image image = generate_image_from_frame_buffer();
     scene = LoadTextureFromImage(image);
-
-    float screenW = GetScreenWidth();
-    float screenH = GetScreenHeight();
+    
+    float screenW = GetRenderWidth();
+    float screenH = GetRenderHeight();
 
     float scaleX = screenW / (float)SCREEN_WIDTH;
     float scaleY = screenH / (float)SCREEN_HEIGHT;
