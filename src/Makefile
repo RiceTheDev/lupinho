@@ -36,7 +36,7 @@ STATIC_LIBS_FLAGS = -Wl,-Bstatic $(RAYLIB_LINUX_STATIC) $(LUA_55_LIB) -Wl,-Bdyna
 SRC_NATIVE = main.c ui.c lua_api.c zip.c
 
 # Compilation Flags
-CFLAGS = -Wall -std=c99 -D_DEFAULT_SOURCE -Wno-missing-braces
+CFLAGS = -Wall -std=gnu99 -D_DEFAULT_SOURCE -Wno-missing-braces
 
 # Emscripten Web Flags
 EMFLAGS = -s USE_GLFW=3
