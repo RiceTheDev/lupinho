@@ -4,6 +4,7 @@
 
 #include "ui.h"
 #include "font.h"
+#include <math.h>
 
 #ifdef PLATFORM_WEB
 #include <emscripten/html5.h>
