@@ -88,29 +88,21 @@ int main() {
 #endif
 
     InitWindow(SCREEN_WIDTH, SCREEN_HEIGHT, "Lupi Emulator");
+    #ifdef PLATFORM_WEB
     EM_ASM({
-        const style = document.createElement('style');
+        const canvas = document.getElementById('canvas');
     
-        style.textContent = `
-            html, body {
-                margin: 0;
-                padding: 0;
-                width: 100%;
-                height: 100%;
-                overflow: hidden;
-                background: black;
-            }
+        canvas.style.width = '100vw';
+        canvas.style.height = '100vh';
+        canvas.style.objectFit = 'contain';
+        canvas.style.display = 'block';
     
-            canvas#canvas {
-                display: block;
-                width: 100vw;
-                height: 100vh;
-                object-fit: contain;
-            }
-        `;
-    
-        document.head.appendChild(style);
+        document.documentElement.style.margin = '0';
+        document.body.style.margin = '0';
+        document.body.style.overflow = 'hidden';
+        document.body.style.background = 'black';
     });
+    #endif
     SetTargetFPS(60);
 
     emscripten_set_main_loop(UpdateDrawFrame, 0, 1);
