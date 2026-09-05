@@ -1,7 +1,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <stdint.h>
-#include <math.h>
+
 #include "ui.h"
 #include "font.h"
 
@@ -314,20 +314,11 @@ void draw_frame_buffer() {
     Image image = generate_image_from_frame_buffer();
     scene = LoadTextureFromImage(image);
 
-    TraceLog(LOG_INFO, "Texture: %d x %d", scene.width, scene.height);
-    TraceLog(LOG_INFO, "Screen: %d x %d", GetScreenWidth(), GetScreenHeight());
-    TraceLog(LOG_INFO, "Render: %d x %d", GetRenderWidth(), GetRenderHeight());
+    Rectangle source = { 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT };
+    Rectangle dest = { 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT };
+    Vector2 origin = { 0, 0 };
 
-    DrawTexturePro(
-        scene,
-        (Rectangle){ 0, 0, (float)scene.width, (float)scene.height },
-        (Rectangle){ 0, 0, (float)GetScreenWidth(), (float)GetScreenHeight() },
-        (Vector2){ 0, 0 },
-        0,
-        WHITE
-    );
-
-    UnloadTexture(scene);
+    DrawTexturePro(scene, source, dest, origin, 0, WHITE);
     UnloadImage(image);
 }
 
