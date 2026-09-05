@@ -314,7 +314,6 @@ Image generate_image_from_frame_buffer() {
 
     return image;
 }
-
 void draw_frame_buffer() {
     Image image = generate_image_from_frame_buffer();
 
@@ -324,9 +323,44 @@ void draw_frame_buffer() {
         UpdateTexture(scene, image.data);
     }
 
-    DrawTexture(scene, 0, 0, WHITE);
-
     UnloadImage(image);
+
+    float screenW = GetScreenWidth();
+    float screenH = GetScreenHeight();
+
+    float scaleX = screenW / (float)SCREEN_WIDTH;
+    float scaleY = screenH / (float)SCREEN_HEIGHT;
+
+    float scale = fminf(scaleX, scaleY);
+
+    float destW = SCREEN_WIDTH * scale;
+    float destH = SCREEN_HEIGHT * scale;
+
+    float destX = (screenW - destW) / 2.0f;
+    float destY = (screenH - destH) / 2.0f;
+
+    Rectangle source = {
+        0,
+        0,
+        SCREEN_WIDTH,
+        SCREEN_HEIGHT
+    };
+
+    Rectangle dest = {
+        destX,
+        destY,
+        destW,
+        destH
+    };
+
+    DrawTexturePro(
+        scene,
+        source,
+        dest,
+        (Vector2){ 0, 0 },
+        0,
+        WHITE
+    );
 }
 
 void clear_frame_buffer() {
