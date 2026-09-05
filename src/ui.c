@@ -5,6 +5,10 @@
 #include "ui.h"
 #include "font.h"
 
+#ifdef PLATFORM_WEB
+#include <emscripten/html5.h>
+#endif
+
 //----------------------------------------------------------------------------------
 // Global vars
 //----------------------------------------------------------------------------------
@@ -309,16 +313,60 @@ Image generate_image_from_frame_buffer() {
 
     return image;
 }
-
 void draw_frame_buffer() {
     Image image = generate_image_from_frame_buffer();
     scene = LoadTextureFromImage(image);
 
-    Rectangle source = { 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT };
-    Rectangle dest = { 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT };
-    Vector2 origin = { 0, 0 };
+    int canvasW;
+    int canvasH;
 
-    DrawTexturePro(scene, source, dest, origin, 0, WHITE);
+#ifdef PLATFORM_WEB
+    emscripten_get_canvas_element_size("#canvas", &canvasW, &canvasH);
+#else
+    canvasW = GetScreenWidth();
+    canvasH = GetScreenHeight();
+#endif
+
+    float screenW = (float)canvasW;
+    float screenH = (float)canvasH;
+
+    float scaleX = screenW / (float)SCREEN_WIDTH;
+    float scaleY = screenH / (float)SCREEN_HEIGHT;
+
+    float scale = fminf(scaleX, scaleY);
+
+    float destW = SCREEN_WIDTH * scale;
+    float destH = SCREEN_HEIGHT * scale;
+
+    float destX = (screenW - destW) / 2.0f;
+    float destY = (screenH - destH) / 2.0f;
+
+    Rectangle source = {
+        0.0f,
+        0.0f,
+        (float)SCREEN_WIDTH,
+        (float)SCREEN_HEIGHT
+    };
+
+    Rectangle dest = {
+        destX,
+        destY,
+        destW,
+        destH
+    };
+
+    Vector2 origin = { 0.0f, 0.0f };
+
+    DrawTexturePro(
+        scene,
+        source,
+        dest,
+        origin,
+        0.0f,
+        WHITE
+    );
+
+    UnloadTexture(scene);
     UnloadImage(image);
 }
 
