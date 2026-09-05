@@ -326,19 +326,31 @@ void draw_frame_buffer() {
 
     UnloadImage(image);
 
-    float screenW = (float)GetRenderWidth();
-    float screenH = (float)GetRenderHeight();
+    float screenW;
+    float screenH;
+
+#ifdef PLATFORM_WEB
+    int canvasW;
+    int canvasH;
+
+    emscripten_get_canvas_element_size("#canvas", &canvasW, &canvasH);
+
+    screenW = (float)canvasW;
+    screenH = (float)canvasH;
+#else
+    screenW = (float)GetScreenWidth();
+    screenH = (float)GetScreenHeight();
+#endif
 
     float scaleX = screenW / (float)SCREEN_WIDTH;
     float scaleY = screenH / (float)SCREEN_HEIGHT;
-
     float scale = fminf(scaleX, scaleY);
 
     float destW = (float)SCREEN_WIDTH * scale;
     float destH = (float)SCREEN_HEIGHT * scale;
 
-    float destX = (screenW - destW) / 2.0f;
-    float destY = (screenH - destH) / 2.0f;
+    float destX = (screenW - destW) * 0.5f;
+    float destY = (screenH - destH) * 0.5f;
 
     Rectangle source = {
         0.0f,
