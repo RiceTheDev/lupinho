@@ -4,11 +4,6 @@
 
 #include "ui.h"
 #include "font.h"
-#include <math.h>
-
-#ifdef PLATFORM_WEB
-#include <emscripten/html5.h>
-#endif
 
 //----------------------------------------------------------------------------------
 // Global vars
@@ -317,68 +312,22 @@ Image generate_image_from_frame_buffer() {
 
 void draw_frame_buffer() {
     Image image = generate_image_from_frame_buffer();
+    scene = LoadTextureFromImage(image);
 
-    if (scene.id == 0) {
-        scene = LoadTextureFromImage(image);
-    } else {
-        UpdateTexture(scene, image.data);
-    }
+    Rectangle source = { 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT };
+    Rectangle dest = { 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT };
+    Vector2 origin = { 0, 0 };
 
+    DrawTexturePro(scene, source, dest, origin, 0, WHITE);
     UnloadImage(image);
-
-    float screenW;
-    float screenH;
-
-#ifdef PLATFORM_WEB
-    int canvasW;
-    int canvasH;
-
-    emscripten_get_canvas_element_size("#canvas", &canvasW, &canvasH);
-
-    screenW = (float)canvasW;
-    screenH = (float)canvasH;
-#else
-    screenW = (float)GetScreenWidth();
-    screenH = (float)GetScreenHeight();
-#endif
-
-    float scaleX = screenW / (float)SCREEN_WIDTH;
-    float scaleY = screenH / (float)SCREEN_HEIGHT;
-    float scale = fminf(scaleX, scaleY);
-
-    float destW = (float)SCREEN_WIDTH * scale;
-    float destH = (float)SCREEN_HEIGHT * scale;
-
-    float destX = (screenW - destW) * 0.5f;
-    float destY = (screenH - destH) * 0.5f;
-
-    Rectangle source = {
-        0.0f,
-        0.0f,
-        (float)SCREEN_WIDTH,
-        (float)SCREEN_HEIGHT
-    };
-
-    Rectangle dest = {
-        destX,
-        destY,
-        destW,
-        destH
-    };
-
-    DrawTexturePro(
-        scene,
-        source,
-        dest,
-        (Vector2){ 0.0f, 0.0f },
-        0.0f,
-        WHITE
-    );
 }
+
 void clear_frame_buffer() {
     for(int i = 0; i < SCREEN_HEIGHT; i++) {
         memset(frame_buffer[i], 0, SCREEN_WIDTH);
     }
+
+    UnloadTexture(scene);
 }
 
 //----------------------------------------------------------------------------------
