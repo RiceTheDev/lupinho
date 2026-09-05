@@ -88,6 +88,29 @@ int main() {
 #endif
 
     InitWindow(SCREEN_WIDTH, SCREEN_HEIGHT, "Lupi Emulator");
+    EM_ASM({
+        const style = document.createElement('style');
+    
+        style.textContent = `
+            html, body {
+                margin: 0;
+                padding: 0;
+                width: 100%;
+                height: 100%;
+                overflow: hidden;
+                background: black;
+            }
+    
+            canvas#canvas {
+                display: block;
+                width: 100vw;
+                height: 100vh;
+                object-fit: contain;
+            }
+        `;
+    
+        document.head.appendChild(style);
+    });
     SetTargetFPS(60);
 
     emscripten_set_main_loop(UpdateDrawFrame, 0, 1);
