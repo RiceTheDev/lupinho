@@ -313,48 +313,17 @@ Image generate_image_from_frame_buffer() {
 void draw_frame_buffer() {
     Image image = generate_image_from_frame_buffer();
     scene = LoadTextureFromImage(image);
-TraceLog(LOG_INFO,
-    "SCREEN=%dx%d | SCREEN_GET=%dx%d | scale=%.2f | dest=%.2fx%.2f @ %.2f,%.2f",
-    SCREEN_WIDTH,
-    SCREEN_HEIGHT,
-    GetScreenWidth(),
-    GetScreenHeight(),
-    scale,
-    destW,
-    destH,
-    destX,
-    destY
-);
-    float screenW = (float)GetScreenWidth();
-    float screenH = (float)GetScreenHeight();
 
-    float scaleX = screenW / (float)SCREEN_WIDTH;
-    float scaleY = screenH / (float)SCREEN_HEIGHT;
-    float scale = fminf(scaleX, scaleY);
-
-    float destW = SCREEN_WIDTH * scale;
-    float destH = SCREEN_HEIGHT * scale;
-
-    float destX = (screenW - destW) / 2.0f;
-    float destY = (screenH - destH) / 2.0f;
-
-    Rectangle source = {
-        0, 0,
-        (float)SCREEN_WIDTH,
-        (float)SCREEN_HEIGHT
-    };
-
-    Rectangle dest = {
-        destX, destY,
-        destW, destH
-    };
+    TraceLog(LOG_INFO, "Texture: %d x %d", scene.width, scene.height);
+    TraceLog(LOG_INFO, "Screen: %d x %d", GetScreenWidth(), GetScreenHeight());
+    TraceLog(LOG_INFO, "Render: %d x %d", GetRenderWidth(), GetRenderHeight());
 
     DrawTexturePro(
         scene,
-        source,
-        dest,
+        (Rectangle){ 0, 0, (float)scene.width, (float)scene.height },
+        (Rectangle){ 0, 0, (float)GetScreenWidth(), (float)GetScreenHeight() },
         (Vector2){ 0, 0 },
-        0.0f,
+        0,
         WHITE
     );
 
