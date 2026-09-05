@@ -313,7 +313,18 @@ Image generate_image_from_frame_buffer() {
 void draw_frame_buffer() {
     Image image = generate_image_from_frame_buffer();
     scene = LoadTextureFromImage(image);
-
+TraceLog(LOG_INFO,
+    "SCREEN=%dx%d | SCREEN_GET=%dx%d | scale=%.2f | dest=%.2fx%.2f @ %.2f,%.2f",
+    SCREEN_WIDTH,
+    SCREEN_HEIGHT,
+    GetScreenWidth(),
+    GetScreenHeight(),
+    scale,
+    destW,
+    destH,
+    destX,
+    destY
+);
     float screenW = (float)GetScreenWidth();
     float screenH = (float)GetScreenHeight();
 
