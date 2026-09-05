@@ -314,6 +314,7 @@ Image generate_image_from_frame_buffer() {
 
     return image;
 }
+
 void draw_frame_buffer() {
     Image image = generate_image_from_frame_buffer();
 
@@ -325,25 +326,25 @@ void draw_frame_buffer() {
 
     UnloadImage(image);
 
-    float screenW = GetScreenWidth();
-    float screenH = GetScreenHeight();
+    float screenW = (float)GetRenderWidth();
+    float screenH = (float)GetRenderHeight();
 
     float scaleX = screenW / (float)SCREEN_WIDTH;
     float scaleY = screenH / (float)SCREEN_HEIGHT;
 
     float scale = fminf(scaleX, scaleY);
 
-    float destW = SCREEN_WIDTH * scale;
-    float destH = SCREEN_HEIGHT * scale;
+    float destW = (float)SCREEN_WIDTH * scale;
+    float destH = (float)SCREEN_HEIGHT * scale;
 
     float destX = (screenW - destW) / 2.0f;
     float destY = (screenH - destH) / 2.0f;
 
     Rectangle source = {
-        0,
-        0,
-        SCREEN_WIDTH,
-        SCREEN_HEIGHT
+        0.0f,
+        0.0f,
+        (float)SCREEN_WIDTH,
+        (float)SCREEN_HEIGHT
     };
 
     Rectangle dest = {
@@ -357,12 +358,11 @@ void draw_frame_buffer() {
         scene,
         source,
         dest,
-        (Vector2){ 0, 0 },
-        0,
+        (Vector2){ 0.0f, 0.0f },
+        0.0f,
         WHITE
     );
 }
-
 void clear_frame_buffer() {
     for(int i = 0; i < SCREEN_HEIGHT; i++) {
         memset(frame_buffer[i], 0, SCREEN_WIDTH);
