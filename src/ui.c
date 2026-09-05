@@ -296,6 +296,20 @@ void draw_print(const char *text, int x, int y, int color_index) {
 //----------------------------------------------------------------------------------
 Texture scene;
 
+Image generate_image_from_frame_buffer() {
+    Image image = GenImageColor(SCREEN_WIDTH, SCREEN_HEIGHT, BLANK);
+    Color *pixels = (Color *)image.data;
+
+    for(int i = 0; i < SCREEN_HEIGHT; i++) {
+        for(int j = 0; j < SCREEN_WIDTH; j++) {
+            int pixel_index = j + (SCREEN_WIDTH * i);
+            pixels[pixel_index] = get_palette_color(frame_buffer[i][j]);
+        }
+    }
+
+    return image;
+}
+
 void draw_frame_buffer() {
     Image image = generate_image_from_frame_buffer();
     scene = LoadTextureFromImage(image);
@@ -332,43 +346,6 @@ void draw_frame_buffer() {
         0.0f,
         WHITE
     );
-
-    UnloadTexture(scene);
-    UnloadImage(image);
-}
-
-void draw_frame_buffer() {
-    Image image = generate_image_from_frame_buffer();
-    scene = LoadTextureFromImage(image);
-    
-    float screenW = GetRenderWidth();
-    float screenH = GetRenderHeight();
-
-    float scaleX = screenW / (float)SCREEN_WIDTH;
-    float scaleY = screenH / (float)SCREEN_HEIGHT;
-
-    float scale = fminf(scaleX, scaleY);
-
-    float destW = SCREEN_WIDTH * scale;
-    float destH = SCREEN_HEIGHT * scale;
-
-    float destX = (screenW - destW) / 2.0f;
-    float destY = (screenH - destH) / 2.0f;
-
-    Rectangle source = {
-        0, 0,
-        (float)SCREEN_WIDTH,
-        (float)SCREEN_HEIGHT
-    };
-
-    Rectangle dest = {
-        destX, destY,
-        destW, destH
-    };
-
-    Vector2 origin = { 0, 0 };
-
-    DrawTexturePro(scene, source, dest, origin, 0, WHITE);
 
     UnloadTexture(scene);
     UnloadImage(image);
